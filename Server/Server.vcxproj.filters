@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{dc0f2320-9a4c-494e-8b2a-620ef8cbdde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Entities">
+      <UniqueIdentifier>{c9687bf2-599d-49ce-9750-aab0411ccfd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Buffers">
+      <UniqueIdentifier>{08ba846b-b2d0-4175-9494-21d7be93dbbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared\Utils">
+      <UniqueIdentifier>{5a349197-fae8-43f5-803c-6a144805c1c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="..\Shared\BaseEntity.cpp">
+      <Filter>Shared\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\PlayerEntity.cpp">
+      <Filter>Shared\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\ProjectileEntity.cpp">
+      <Filter>Shared\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\InBuffer.cpp">
+      <Filter>Shared\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\OutBuffer.cpp">
+      <Filter>Shared\Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shared\maths.cpp">
+      <Filter>Shared\Utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shared\BaseEntity.h">
+      <Filter>Shared\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\PlayerEntity.h">
+      <Filter>Shared\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\ProjectileEntity.h">
+      <Filter>Shared\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\InBuffer.h">
+      <Filter>Shared\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Message.h">
+      <Filter>Shared\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\OutBuffer.h">
+      <Filter>Shared\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\maths.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Rectangle.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Singleton.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Timer.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Utils.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\types.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
