@@ -13,6 +13,12 @@
     <Filter Include="Shared\Utils">
       <UniqueIdentifier>{5a349197-fae8-43f5-803c-6a144805c1c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Network">
+      <UniqueIdentifier>{46c6c64f-a926-4daa-927d-97d204bf6f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{2a0cfdea-0ea9-449c-99ce-56ab69228d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -33,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="..\Shared\maths.cpp">
       <Filter>Shared\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,6 +80,15 @@
     </ClInclude>
     <ClInclude Include="..\Shared\types.h">
       <Filter>Shared\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="TCPConnection.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -39,9 +39,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>c:\Program Files (x86)\boost\boost_1_47;c:\libs\SDL-1.2.14\include;$(IncludePath)</IncludePath>
+    <LibraryPath>c:\Program Files (x86)\boost\boost_1_47\lib;c:\libs\SDL-1.2.14\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>c:\Program Files (x86)\boost\boost_1_47;c:\libs\SDL-1.2.14;$(IncludePath)</IncludePath>
+    <LibraryPath>c:\Program Files (x86)\boost\boost_1_47\lib;c:\libs\SDL-1.2.14\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -52,8 +56,9 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;winmm.lib;glu32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -80,7 +85,14 @@
     <ClCompile Include="..\Shared\OutBuffer.cpp" />
     <ClCompile Include="..\Shared\PlayerEntity.cpp" />
     <ClCompile Include="..\Shared\ProjectileEntity.cpp" />
+    <ClCompile Include="Correction.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Extrapolator.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Visualisation.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\BaseEntity.h" />
@@ -95,6 +107,16 @@
     <ClInclude Include="..\Shared\Timer.h" />
     <ClInclude Include="..\Shared\types.h" />
     <ClInclude Include="..\Shared\Utils.h" />
+    <ClInclude Include="Correction.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Extrapolator.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="SDL_Collide.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TCPClient.h" />
+    <ClInclude Include="UDPClient.h" />
+    <ClInclude Include="Visualisation.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

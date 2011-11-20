@@ -57,7 +57,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL.lib;SDLmain.lib;winmm.lib;glu32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -86,6 +86,7 @@
     <ClCompile Include="..\Shared\PlayerEntity.cpp" />
     <ClCompile Include="..\Shared\ProjectileEntity.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\BaseEntity.h" />
@@ -100,6 +101,9 @@
     <ClInclude Include="..\Shared\Timer.h" />
     <ClInclude Include="..\Shared\types.h" />
     <ClInclude Include="..\Shared\Utils.h" />
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="TCPConnection.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
