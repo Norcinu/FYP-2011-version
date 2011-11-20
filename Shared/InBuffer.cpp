@@ -1,5 +1,5 @@
 #include "InBuffer.h"
-#include <boost/tr1/memory.hpp>
+//#include <boost/tr1/memory.hpp>
 #include <strstream>
 #include <sstream>
 
@@ -35,7 +35,7 @@ Message InBuffer::PopMessage()
 	stream >> temp;
 	buffer.pop_front();
 	
-	return temp;
+	return std::move(temp); // added std::move
 }
 
 bool InBuffer::Empty() const
@@ -54,7 +54,8 @@ Message InBuffer::Front()
 	Message temp;
 	stream >> temp;
 	
-	return temp;
+	return std::move(temp);
+	//return temp;
 }
 
 void InBuffer::WaitAndPop( std::string& popped_value )

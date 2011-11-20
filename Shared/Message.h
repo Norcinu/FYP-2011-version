@@ -2,7 +2,8 @@
 #define MESSAGE_H
 
 #include <iostream>
-//#include "BaseEntity.h"
+#include "BaseEntity.h"
+#include "types.h"
 
 //typedef boost::shared_ptr<BaseEntity> entity_ptr;
 
@@ -14,10 +15,10 @@ public:
 	{
 	}
 
-	/*Message(entity_ptr ent) : active(ent->Active()), id(ent->ID()), 
+	Message(entity_ptr ent) : active(ent->Active()), id(ent->ID()), 
 		health(ent->Health()), x(ent->Position().x), y(ent->Position().y)
 	{
-	}*/
+	}
 
 	Message(const Message& copy)
 	{

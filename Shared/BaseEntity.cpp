@@ -2,6 +2,8 @@
 //#include "Visualisation.h"
 //#include "SDL_Collide.h"
 
+// REMOVE SDL FROM THIS PROJECT!!!!
+
 #include <SDL.h>
 
 #pragma warning(disable:4244)

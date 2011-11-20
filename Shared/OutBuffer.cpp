@@ -13,21 +13,21 @@ OutBuffer::~OutBuffer(void)
 		buffer.clear();
 }
 
-//void OutBuffer::PushMessage( const entity_ptr ent )
-//{
-//	Message temp(ent);
-//	std::ostringstream stream;
-//	stream << temp;
-//	std::string string_message = stream.str() + "\r\n";
-//	
-//	boost::mutex::scoped_lock lock(buffer_mutex);
-//	bool const was_empty = buffer.empty();
-//	buffer.push_back(string_message);
-//	
-//	lock.unlock();
-//	if (was_empty)
-//		buffer_condition.notify_one();
-//}
+void OutBuffer::PushMessage( const entity_ptr ent )
+{
+	Message temp(ent);
+	std::ostringstream stream;
+	stream << temp;
+	std::string string_message = stream.str() + "\r\n";
+	
+	boost::mutex::scoped_lock lock(buffer_mutex);
+	const bool was_empty = buffer.empty();
+	buffer.push_back(string_message);
+	
+	lock.unlock();
+	if (was_empty)
+		buffer_condition.notify_one();
+}
 
 std::string OutBuffer::PopMessage()
 {
@@ -55,7 +55,7 @@ std::string OutBuffer::Front()
 	boost::mutex::scoped_lock lock(buffer_mutex);
 	std::string ret_val(buffer.front());
 	buffer.pop_front();
-	return ret_val;
+	return std::move(ret_val);
 }
 
 void OutBuffer::WaitAndPop( std::string& popped_value )

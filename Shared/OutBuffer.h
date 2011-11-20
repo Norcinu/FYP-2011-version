@@ -23,7 +23,7 @@ public:
 	bool Empty() const;
 	std::string Front();
 	
-	//void PushMessage(const entity_ptr ent);
+	void PushMessage(const entity_ptr ent);
 	std::string PopMessage();
 	void WaitAndPop(std::string& popped_value);
 
