@@ -1,12 +1,12 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-// maybe re-write this using boost or in some other cross-platform way.
-
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 
 #include <Windows.h>
+#include <MMSystem.h>
+#include <boost\shared_ptr.hpp>
 
 class Timer
 {
@@ -36,5 +36,19 @@ private:
 	double m_frequency;
 	unsigned long long m_baseTime;
 };
+
+namespace timing
+{
+	static bool ShouldUpdate(boost::shared_ptr<Timer> timer, double last_update, int frequency)
+	{
+		return timer->Milliseconds() > last_update / frequency;
+	}
+
+	static unsigned long ElapsedTime(unsigned int start_time)
+	{
+		auto difference = timeGetTime() - start_time;
+		return difference;
+	}
+}
 
 #endif
