@@ -8,16 +8,14 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
-#include "InBuffer.h"
-#include "OutBuffer.h"
+
+#include "../Shared/InBuffer.h"
+#include "../Shared/OutBuffer.h"
+#include "../Shared/Utils.h"
+
 #include "TCPConnection.h"
 
-//using boost::asio::ip::tcp;
-//using boost::asio::ip::udp;
-
 namespace fyp_ip = boost::asio::ip;
-//namespace fyp_udp = boost::asio::ip;
-
 using namespace fyp_ip;
 
 namespace net
@@ -92,7 +90,7 @@ namespace net
 	private:
 		void StartAccept()
 		{
-			TCPConnection::connection_ptr new_connection = TCPConnection::Create(acceptor.io_service());
+			TCPConnection::connection_ptr new_connection = TCPConnection::Create(acceptor.get_io_service());
 			acceptor.async_accept(new_connection->Socket(), boost::bind(&TCPServer::HandleAccept, this, 
 				new_connection, boost::asio::placeholders::error));
 		}

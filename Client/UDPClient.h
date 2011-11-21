@@ -12,19 +12,20 @@
 #include <iostream>
 #include <sstream>
 
-#include "InBuffer.h"
-#include "OutBuffer.h"
+#include "../Shared/InBuffer.h"
+#include "../Shared/OutBuffer.h"
+#include "../Shared/Utils.h"
 
 using boost::asio::ip::udp;
 
 namespace net 
 {
-	template <class T>
-	bool FromString(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
-	{
-		std::istringstream iss(s);
-		return !(iss >> f >> t).fail();
-	}
+	//template <class T>
+	//bool FromString(T& t, const std::string& s, std::ios_base& (*f)(std::ios_base&))
+	//{
+	//	std::istringstream iss(s);
+	//	return !(iss >> f >> t).fail();
+	//}
 
 	template<typename T>
 	std::string ToString(T t)
@@ -54,7 +55,7 @@ namespace net
 		void CreateLocalEndpoint( const std::string port ) 
 		{
 			short p;
-			FromString<short>(p, port, std::dec);
+			utils::str::FromString<short>(p, port, std::dec);
 			udp::endpoint temp(boost::asio::ip::address::from_string("127.0.0.1"), p);
 
 			m_localEndpoint = temp;
@@ -67,43 +68,31 @@ namespace net
 
 		void SendUpdateToServer()
 		{
-			try 
-			{
-				while (true)
-				{		
-					boost::asio::io_service io_service_;
-					boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service_));
+			bool active = true;
+			while (active)
+			{		
+				boost::asio::io_service io_service_;
+				boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service_));
 
-					udp::resolver resolver(io_service_);
-					udp::resolver::query query(udp::v4(), m_serverIP,  m_serverPort);
-					udp::endpoint rec_endpoint = *resolver.resolve(query);
+				udp::resolver resolver(io_service_);
+				udp::resolver::query query(udp::v4(), m_serverIP,  m_serverPort);
+				udp::endpoint rec_endpoint = *resolver.resolve(query);
 
-					udp::socket socket_(io_service_);
+				udp::socket socket_(io_service_);
 					
-					if (!socket_.is_open())
-						socket_.open(udp::v4());
+				if (!socket_.is_open()) socket_.open(udp::v4());
 
-					//if (!OUT_BUFFER.Empty())
-					while (!OUT_BUFFER.Empty())
-					{
-						using boost::asio::buffer;
-						static std::string s = OUT_BUFFER.Front(); //OUT_BUFFER.PopMessage();
-						std::cout << "sending : " << s << std::endl;
-						socket_.send_to(buffer(s), rec_endpoint);
-					}
-			
-					t.join();
+				while (!OUT_BUFFER.Empty())
+				{
+					using boost::asio::buffer;
+					static std::string s = OUT_BUFFER.Front(); //OUT_BUFFER.PopMessage();
+					std::cout << "sending : " << s << std::endl;
+					socket_.send_to(buffer(s), rec_endpoint);
 				}
-			}
-			catch(std::exception& e)
-			{
-				std::cerr << e.what() << std::endl;
+			
+				t.join();
 			}
 		}
-
-		/*void PopulateMessageVector(message msg)
-		{
-		}*/
 
 		void PopulateMessageVector(std::vector<std::string>& v)
 		{
@@ -112,41 +101,37 @@ namespace net
 
 		void ReceiveServerUpdate()
 		{
-			try
-			{
-				while (true)
+			bool receiving = true;
+			//while (receiving)
+			//{
+				std::cout << "receive thread" << std::endl;
+				boost::asio::io_service io_service_;
+				boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service_));
+
+				udp::resolver resolver(io_service_);
+				udp::resolver::query query(udp::v4(), m_serverIP,  m_serverPort);
+				udp::endpoint rec_endpoint = *resolver.resolve(query);
+
+				udp::socket socket_(io_service_);
+				if (!socket_.is_open())
 				{
-					std::cout << "receive thread" << std::endl;
-					boost::asio::io_service io_service_;
-					boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service_));
-
-					udp::resolver resolver(io_service_);
-					udp::resolver::query query(udp::v4(), m_serverIP,  m_serverPort);
-					udp::endpoint rec_endpoint = *resolver.resolve(query);
-
-					udp::socket socket_(io_service_);
-					if (!socket_.is_open())
-					{
-						socket_.open(udp::v4());
-						socket_.bind(m_localEndpoint);
-					}
-
-					udp::endpoint sender_endpoint;
-
-					std::cout << "Receiving." << std::endl;
-					using boost::asio::buffer;
-
-					boost::array<char, 128> rec_buffer;
-					size_t len = socket_.receive_from(buffer(rec_buffer), sender_endpoint);
-					IN_BUFFER.PushMessage(rec_buffer.data());
-					
-					t.join();
+					socket_.open(udp::v4());
+					socket_.bind(m_localEndpoint);
 				}
-			}
-			catch(std::exception& e)
-			{
-				std::cout << e.what() << std::endl;
-			}
+
+				udp::endpoint sender_endpoint;
+
+				std::cout << "Receiving." << std::endl;
+				using boost::asio::buffer;
+
+				boost::array<char, 128> rec_buffer;
+				size_t len = socket_.receive_from(buffer(rec_buffer), sender_endpoint);
+				IN_BUFFER.PushMessage(rec_buffer.data());
+				
+				//receiving = false;
+				t.join();
+			//}
+
 			std::cout << "exiting receive thread" << std::endl;
 		}
 

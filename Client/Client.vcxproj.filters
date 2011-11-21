@@ -19,11 +19,8 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{f7304980-3743-441f-8837-f717620c9b1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Network\Game">
-      <UniqueIdentifier>{68c292a9-93f5-4920-9c9c-90767e7401af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
-      <UniqueIdentifier>{b9a775d5-f6cd-4c23-b62a-f0e246ee3d1c}</UniqueIdentifier>
+      <UniqueIdentifier>{68c292a9-93f5-4920-9c9c-90767e7401af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -50,16 +47,16 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Extrapolator.cpp">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Correction.cpp">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Graphics</Filter>
@@ -109,19 +106,19 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Extrapolator.h">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Correction.h">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="SDL_Collide.h">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Network\Game</Filter>
+      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="UDPClient.h">
       <Filter>Network</Filter>

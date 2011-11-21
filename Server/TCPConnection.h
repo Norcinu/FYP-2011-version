@@ -6,7 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
-#include "Utils.h"
+#include "../Shared/Utils.h"
 
 using namespace boost::asio;
 using boost::asio::ip::tcp;
