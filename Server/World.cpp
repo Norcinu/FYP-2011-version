@@ -1,4 +1,5 @@
 #include "World.h"
+#include "../Shared/Buffers.h"
 #include "../Shared/BaseEntity.h"
 #include "../Shared/PlayerEntity.h"
 #include "../Shared/OutBuffer.h"
@@ -19,6 +20,15 @@ World::World(void) : running(true), world_timer(new Timer)
 	INIT_OUT_BUFFER;
 }
 
+World::World( MessageBuffer<Message> * in_buffer_, MessageBuffer<std::string> * out_buffer_ ) :
+	running(true),
+	world_timer(new Timer),
+	in_buffer(in_buffer_),
+	out_buffer(out_buffer_)
+{
+	entities.reserve(4);
+}
+
 World::~World(void)
 {
 	DESTROY_IN_BUFFER;
@@ -35,8 +45,9 @@ bool World::CreateEntity()
 	player->ID(entities.size());
 	player->Position(RandomPosition(0, 448));
 	entities.push_back(player);
-	
-	OUT_BUFFER.PushMessage(entities.back());
+
+	out_buffer->pushMessage(Serialize());
+	//OUT_BUFFER.PushMessage(entities.back());
 
 	return true;
 }
@@ -55,9 +66,14 @@ void World::Update()
 			Message first_update(IN_BUFFER.Front());
 			UpdateEntity(first_update);
 			
-			ent_itor it = std::find_if(entities.begin(), entities.end(),
-				std::bind2nd(std::ptr_fun(CompareID), first_update.id));
-						
+			/*ent_itor it = std::find_if(entities.begin(), entities.end(),
+			std::bind2nd(std::ptr_fun(CompareID), first_update.id));*/
+			
+			auto it = std::find_if(entities.begin(), entities.end(),  
+				[&first_update](const entity_ptr ent) -> bool {
+					return ent->ID() == first_update.id;
+				});		
+
 			if (it != entities.end())
 				OUT_BUFFER.PushMessage((*it));
 		}
@@ -94,4 +110,13 @@ void World::DoUpdate( ent_itor it, const Message& temp )
 	
 	math::Vector2 p(temp.x, temp.y);
 	(*it)->Position(p);	
+}
+
+std::string World::Serialize()
+{
+	Message temp(entities.back());
+	std::ostringstream stream;
+	stream << temp;
+	std::string string_message = stream.str() + "\r\n";
+	return std::move (string_message);
 }

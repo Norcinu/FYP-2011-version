@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\BaseEntity.cpp" />
+    <ClCompile Include="..\Shared\Buffers.cpp" />
     <ClCompile Include="..\Shared\InBuffer.cpp" />
     <ClCompile Include="..\Shared\maths.cpp" />
     <ClCompile Include="..\Shared\OutBuffer.cpp" />
@@ -90,7 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\BaseEntity.h" />
+    <ClInclude Include="..\Shared\Buffers.h" />
     <ClInclude Include="..\Shared\InBuffer.h" />
+    <ClInclude Include="..\Shared\Logging.h" />
     <ClInclude Include="..\Shared\maths.h" />
     <ClInclude Include="..\Shared\Message.h" />
     <ClInclude Include="..\Shared\OutBuffer.h" />
@@ -102,6 +105,7 @@
     <ClInclude Include="..\Shared\types.h" />
     <ClInclude Include="..\Shared\Utils.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Session.h" />
     <ClInclude Include="TCPConnection.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

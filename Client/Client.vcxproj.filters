@@ -64,6 +64,9 @@
     <ClCompile Include="Engine.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\Buffers.cpp">
+      <Filter>Shared\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\BaseEntity.h">
@@ -131,6 +134,12 @@
     </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Buffers.h">
+      <Filter>Shared\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Logging.h">
+      <Filter>Shared\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

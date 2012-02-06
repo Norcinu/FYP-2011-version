@@ -7,7 +7,9 @@
 #include <boost/random.hpp>
 #include <vector>
 #include <algorithm>
+#include <string>
 
+#include "../Shared/Message.h"
 #include "../Shared/Singleton.h"
 #include "../Shared/Timer.h"
 #include "../Shared/maths.h"
@@ -21,6 +23,9 @@
 #define MAX_CYCLES_PER_FRAME (MAXIMUM_FRAME_RATE / MINIMUM_FRAME_RATE)
 
 class BaseEntity;
+template <class MessageType> class MessageBuffer;//<Message>;
+template <class MessageType> class MessageBuffer;//<std::string>;
+
 typedef boost::shared_ptr<BaseEntity> entity_ptr;
 typedef std::vector<entity_ptr>::iterator ent_itor;
 typedef std::vector<entity_ptr>::const_iterator ent_const_itor;
@@ -29,9 +34,13 @@ class World : public Singleton<World>
 {
 public:
 	World(void);
+	World(MessageBuffer<Message> * in_buffer_, MessageBuffer<std::string> * out_buffer_);
 	~World(void);
 
 	bool CreateEntity();
+
+	std::string Serialize();
+
 	bool IsCollideable(const entity_ptr ent1, const entity_ptr ent2) const;
 	math::Vector2 RandomPosition(const int upper_bound, const int lower_bound);
 	void Update();
@@ -49,6 +58,9 @@ private:
 	boost::shared_ptr<Timer> world_timer;
 	std::vector<entity_ptr> entities;
 	boost::mt19937 generator;
+
+	MessageBuffer<std::string> * out_buffer;
+	MessageBuffer<Message> * in_buffer;
 };
 
 #endif

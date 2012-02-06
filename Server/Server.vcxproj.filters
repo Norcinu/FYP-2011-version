@@ -43,6 +43,9 @@
     <ClCompile Include="World.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shared\Buffers.cpp">
+      <Filter>Shared\Buffers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\BaseEntity.h">
@@ -89,6 +92,15 @@
     </ClInclude>
     <ClInclude Include="World.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Buffers.h">
+      <Filter>Shared\Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shared\Logging.h">
+      <Filter>Shared\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

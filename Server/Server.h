@@ -8,7 +8,10 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <string>
 
+#include "../Shared/Buffers.h"
+#include "../Shared/Message.h"
 #include "../Shared/InBuffer.h"
 #include "../Shared/OutBuffer.h"
 #include "../Shared/Utils.h"
@@ -20,6 +23,16 @@ using namespace fyp_ip;
 
 namespace net
 {
+	// pack this into a message as well a struct containing the data?
+	enum msgtype_t
+	{
+		CONNECTING		= 0x01,
+		CONNECTED		= 0x02,
+		GAME_UPDATE		= 0x04,
+		CHAT_MESSAGE	= 0x08,
+		DISCONNECTING	= 0x10
+	};
+
 	class TCPServer
 	{
 	public:
@@ -56,13 +69,13 @@ namespace net
 		//	static std::string msg = "test";
 			for (tcp_const_itor it = connections.begin(); it!=connections.end(); ++it)
 			{
-				(*it)->SendMessage(msg);
+				(*it)->SendMessage(msg); 
 			}
 		}
 
 		const int Size() const { /*std::cout << "count " << count << std::endl;*/ return count;}
 
-		std::string RemoteAddress() const 
+		const std::string& RemoteAddress() const // was non const.
 		{
 			return connections.back()->GetAddress();
 		}
