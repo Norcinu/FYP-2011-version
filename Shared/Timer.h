@@ -51,6 +51,12 @@ public:
 
     double Seconds()
     {
+        return 1.00;
+    }
+
+    double Milliseconds() 
+    {
+        return 1.00;
     }
 private:
     
