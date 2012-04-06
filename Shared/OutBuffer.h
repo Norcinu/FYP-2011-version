@@ -1,7 +1,7 @@
 #ifndef OUTBUFFER_H
 #define OUTBUFFER_H
 
-#include "singleton.h"
+#include "Singleton.h"
 #include "Message.h"
 #include <string>
 #include <deque>

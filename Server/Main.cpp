@@ -2,8 +2,18 @@
 #include "Server.h"
 #include "../Shared/Timer.h"
 #include "../Shared/Utils.h"
-#include "../Shared/Buffers.h"
+//#include "../Shared/Buffers.h"
 #include "World.h"
+
+#ifdef _WIN32
+    #define GET_TIME timeGetTime()
+#else
+    #include <time.h>
+    
+    timespec time1;
+    #define GET_TIME clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1)
+    
+#endif
 
 int main(int argc, char *argv[])
 {

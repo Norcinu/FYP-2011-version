@@ -1,11 +1,11 @@
 #ifndef INBUFFER_H
 #define INBUFFER_H
 
-#include "singleton.h"
+#include "Singleton.h"
 #include <deque>
 #include "Message.h"
-#include <boost\thread\mutex.hpp>
-#include <boost\thread\condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/condition_variable.hpp>
 //#include <boost/thread.hpp>
 
 /*

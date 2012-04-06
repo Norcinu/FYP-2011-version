@@ -1,12 +1,13 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 
 #include <Windows.h>
 #include <MMSystem.h>
-#include <boost\shared_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 
 class Timer
 {
@@ -36,6 +37,26 @@ private:
 	double m_frequency;
 	unsigned long long m_baseTime;
 };
+#else
+// Linux version
+class Timer 
+{
+public:
+    Timer() { Reset(); }
+    ~Timer() {}
+
+    void Reset() 
+    {
+    }
+
+    double Seconds()
+    {
+    }
+private:
+    
+};
+
+#endif
 
 namespace timing
 {
