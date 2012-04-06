@@ -3,7 +3,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/foreach.hpp>
-#include <boost/tr1/memory.hpp>
 #include <boost/random.hpp>
 #include <vector>
 #include <algorithm>

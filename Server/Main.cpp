@@ -19,7 +19,8 @@ int main(int argc, char *argv[])
 {
 	unsigned long start_time = timeGetTime();
 	int client_count = 0;
-	int frequency = 50;
+	unsigned long frequency = 50;
+    //int frequency = 50;
 
 	//boost::shared_ptr<MessageBuffer<std::string>> out_buffer_(new MessageBuffer<std::string>);
 	//boost::shared_ptr<MessageBuffer<Message>> in_buffer_(new MessageBuffer<Message>);
