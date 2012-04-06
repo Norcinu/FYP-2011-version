@@ -2,17 +2,22 @@
 #include "Server.h"
 #include "../Shared/Timer.h"
 #include "../Shared/Utils.h"
-//#include "../Shared/Buffers.h"
+#include "../Shared/Buffers.h"
 #include "World.h"
+#include <string>
 
+/**
+    Move cross platform macros into a seperate header file.
+**/
 #ifdef _WIN32
+    #include<Windows.h>
     #define GET_TIME timeGetTime()
+    #define SLEEP(frequency) Sleep(frequency)
 #else
     #include <time.h>
-    
     timespec time1;
-    #define GET_TIME clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1)
-    
+    #define GET_TIME clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1)    
+    #define SLEEP(frequency) sleep(frequency)
 #endif
 
 int main(int argc, char *argv[])
@@ -20,10 +25,7 @@ int main(int argc, char *argv[])
 	unsigned long start_time = timeGetTime();
 	int client_count = 0;
 	unsigned long frequency = 50;
-    //int frequency = 50;
 
-	//boost::shared_ptr<MessageBuffer<std::string>> out_buffer_(new MessageBuffer<std::string>);
-	//boost::shared_ptr<MessageBuffer<Message>> in_buffer_(new MessageBuffer<Message>);
 	MessageBuffer<std::string> out_buffer_;
 	MessageBuffer<Message> in_buffer_;
 
@@ -41,7 +43,8 @@ int main(int argc, char *argv[])
 		static auto last_time = 0;
 		while (world->Running())
 		{
-			Sleep(frequency);
+            SLEEP(frequency);
+			//Sleep(frequency); // elapsedTime uses timeGetTime() -> change this.
 			auto time_now = timing::ElapsedTime(start_time);
 
 			if (tcp_server.Size() > client_count)
@@ -64,7 +67,7 @@ int main(int argc, char *argv[])
 
 			if (time_now > frequency && !OUT_BUFFER.Empty())
 			{
-				udp_server.Send();
+				udp_server.Send(); // change timeGetTime() usage here.
 				std::cout << "[Sending UDP update] : [timestamp = " << timeGetTime() << "]" << std::endl;
 				last_time = time_now;
 			}

@@ -102,5 +102,8 @@
     <ClInclude Include="..\Shared\Logging.h">
       <Filter>Shared\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\Shared\TimerMacros.h">
+      <Filter>Shared\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

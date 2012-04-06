@@ -76,9 +76,9 @@ namespace math
 		return tmp;
 	}
 
-	Vector2 Vector2::operator*(float scalar) const
+    Vector2 Vector2::operator*(float scalar, math::Vector2& rhs) const
 	{
-		return Vector2(x * scalar, y * scalar);
+		return Vector2(rhs.x * scalar, rhs.y * scalar);
 	}
 
 	Vector2 Vector2::operator/(float scalar) const
@@ -121,7 +121,7 @@ namespace math
 
 	void Vector2::Lerp( const Vector2& p, const Vector2& q, float t )
 	{
-		(*this) = p + (p - q) * t;
+		//(*this) = p + (p - q) * t;
 	}
 }
 
