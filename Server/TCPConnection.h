@@ -70,7 +70,7 @@ public:
 			placeholders::error, placeholders::bytes_transferred));
 	}
 
-	std::string GetAddress() 
+	std::string& GetAddress() 
 	{
 		return socket.remote_endpoint().address().to_string();
 	}
