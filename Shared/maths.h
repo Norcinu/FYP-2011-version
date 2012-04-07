@@ -84,7 +84,7 @@ namespace math
 	// Vector 2
 	class Vector2
 	{
-		friend Vector2 Vector2::operator*( float lhs, const Vector2 &rhs )
+		/*friend Vector2 Vector2::operator*( float lhs, const Vector2 &rhs )
 		{
 			return Vector2(lhs * rhs.x, lhs * rhs.y);
 		}
@@ -92,7 +92,7 @@ namespace math
 		friend Vector2 Vector2::operator -(const Vector2& rhs)
 		{
 			return Vector2(-rhs.x, -rhs.y);
-		}
+		}*/
 
 	public:
 		Vector2(void);
@@ -126,8 +126,8 @@ namespace math
 		Vector2& operator/=(float scalar);
 
 		Vector2 operator+(const Vector2 &rhs) const;
-		Vector2 operator-(const Vector2 &rhs) const;
-		Vector2 operator*(float lhs, const Vector2& rhs) const;
+		//Vector2 operator-(const Vector2 &rhs) const;
+		//Vector2 operator*(float lhs, const Vector2& rhs) const;
 		Vector2 operator/(float scalar) const;
 
 		friend std::ostream& operator<<(std::ostream& os, const Vector2& vec)

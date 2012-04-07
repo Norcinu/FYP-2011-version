@@ -1,14 +1,9 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include "TimerMacros.h"
+
 #ifdef _WIN32
-
-#define WIN32_LEAN_AND_MEAN
-#define VC_EXTRALEAN
-
-#include <Windows.h>
-#include <MMSystem.h>
-#include <boost/shared_ptr.hpp>
 
 class Timer
 {
@@ -38,7 +33,9 @@ private:
 	double m_frequency;
 	unsigned long long m_baseTime;
 };
+
 #else
+
 // Linux version
 class Timer 
 {
@@ -48,35 +45,52 @@ public:
 
     void Reset() 
     {
+        int res = clock_getres(CLOCK_PROCESS_CPUTIME_ID, &resolution);
+        int stt = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start_time);
+        if ((res == -1) || (stt == -1))
+        {
+            printf("ERROR : res %d : stt %d\n", res, stt);
+        }
+        else 
+        { 
+            printf ("LOGGING : res and stt OK\n"); 
+        }
     }
 
     double Seconds()
     {
-        return 1.00;
+        timespec current_time;
+        int result = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &current_time);
+        int seconds = 0;
+        ((result == 0) ? seconds = current_time.tv_sec-start_time.tv_sec : 
+            seconds = result);
+        return seconds;
     }
 
     double Milliseconds() 
     {
-        return 1.00;
+        return Seconds() * 1000.0;
     }
+
 private:
-    
+    timespec start_time;
+    timespec resolution;
 };
 
 #endif
 
-namespace timing
-{
-	static bool ShouldUpdate(boost::shared_ptr<Timer> timer, double last_update, int frequency)
-	{
-		return timer->Milliseconds() > last_update / frequency;
-	}
+//namespace timing
+//{
+        static bool ShouldUpdate(boost::shared_ptr<Timer> timer, double last_update, int frequency)
+        {
+            return timer->Milliseconds() > last_update / frequency;
+        }
 
-	static unsigned long ElapsedTime(unsigned int start_time)
-	{
-		auto difference = timeGetTime() - start_time;
-		return difference;
-	}
-}
+        static unsigned long ElapsedTime(unsigned int start_time)
+        {
+	    auto difference = GET_TIME - start_time;
+	    return difference;
+        }
+//}
 
 #endif
