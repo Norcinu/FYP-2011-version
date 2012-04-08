@@ -31,9 +31,8 @@ int main(int argc, char *argv[])
 		static auto last_time = 0;
 		while (world->Running())
 		{
-                    SLEEP(frequency);
-		    //Sleep(frequency); // elapsedTime uses timeGetTime() -> change this.
-		    auto time_now = /*timing::*/ ElapsedTime(start_time);
+            SLEEP(frequency);
+		    auto time_now = timing::ElapsedTime(start_time);
 
         	    if (tcp_server.Size() > client_count)
 	            {
@@ -48,7 +47,7 @@ int main(int argc, char *argv[])
 			    ++client_count;
 
 			    std::string address = tcp_server.RemoteAddress();
-    			    short port = tcp_server.NewRemotePort();
+    			short port = tcp_server.NewRemotePort();
 			    udp_server.AddEndPoint(address, port);
 			}
 		    }
@@ -56,8 +55,8 @@ int main(int argc, char *argv[])
 		    if (time_now > frequency && !OUT_BUFFER.Empty())
 		    {
 		        udp_server.Send(); // change timeGetTime() usage here.
-			std::cout << "[Sending UDP update] : [timestamp = " << GET_TIME << "]" << std::endl;
-			last_time = time_now;
+			    std::cout << "[Sending UDP update] : [timestamp = " << GET_TIME << "]" << std::endl;
+			    last_time = time_now;
 		    }
 		}
 		

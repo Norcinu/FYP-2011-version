@@ -3,6 +3,7 @@
 
 #include "Singleton.h"
 #include <ostream>
+#include <fstream>
 
 class Logger : public Singleton<Logger>
 {

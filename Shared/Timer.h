@@ -79,18 +79,18 @@ private:
 
 #endif
 
-//namespace timing
-//{
-        static bool ShouldUpdate(boost::shared_ptr<Timer> timer, double last_update, int frequency)
-        {
-            return timer->Milliseconds() > last_update / frequency;
-        }
+namespace timing
+{
+    static bool ShouldUpdate(boost::shared_ptr<Timer> timer, double last_update, int frequency)
+    {
+        return timer->Milliseconds() > last_update / frequency;
+    }
 
-        static unsigned long ElapsedTime(unsigned int start_time)
-        {
-	    auto difference = GET_TIME - start_time;
-	    return difference;
-        }
-//}
+    static unsigned long ElapsedTime(unsigned int start_time)
+    {
+        auto difference = GET_TIME - start_time;
+        return difference;
+    }
+}
 
 #endif
