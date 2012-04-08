@@ -37,7 +37,7 @@
     int seg_get_time()
     {
         timespec time;
-        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time);
+        clock_gettime(CLOCK_MONOTONIC, &time);
         return time.tv_sec * 1000;
     }
 

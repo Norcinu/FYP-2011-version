@@ -45,8 +45,8 @@ public:
 
     void Reset() 
     {
-        int res = clock_getres(CLOCK_PROCESS_CPUTIME_ID, &resolution);
-        int stt = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start_time);
+        int res = clock_getres(CLOCK_MONOTONIC, &resolution);
+        int stt = clock_gettime(CLOCK_MONOTONIC, &start_time);
         if ((res == -1) || (stt == -1))
         {
             printf("ERROR : res %d : stt %d\n", res, stt);
@@ -60,7 +60,7 @@ public:
     double Seconds()
     {
         timespec current_time;
-        int result = clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &current_time);
+        int result = clock_gettime(CLOCK_MONOTONIC, &current_time);
         int seconds = 0;
         ((result == 0) ? seconds = current_time.tv_sec-start_time.tv_sec : 
             seconds = result);
