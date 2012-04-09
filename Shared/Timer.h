@@ -57,7 +57,8 @@ public:
         }
     }
 
-    double Seconds()
+    //double Seconds()
+    auto Seconds() -> int
     {
         timespec current_time;
         int result = clock_gettime(CLOCK_MONOTONIC, &current_time);
@@ -67,9 +68,9 @@ public:
         return seconds;
     }
 
-    double Milliseconds() 
+    auto Milliseconds() -> int
     {
-        return Seconds() * 1000.0;
+        return Seconds() * 1000;
     }
 
 private:
@@ -77,7 +78,7 @@ private:
     timespec resolution;
 };
 
-#endif
+#endif // _WIN32 || __LINUX__
 
 namespace timing
 {
@@ -86,11 +87,12 @@ namespace timing
         return timer->Milliseconds() > last_update / frequency;
     }
 
-    static unsigned long ElapsedTime(unsigned int start_time)
+    //static unsigned long ElapsedTime(unsigned int start_time)
+    static auto ElapsedTime(unsigned int start_time) -> unsigned long
     {
         auto difference = GET_TIME - start_time;
         return difference;
     }
 }
 
-#endif
+#endif // TIMER_H

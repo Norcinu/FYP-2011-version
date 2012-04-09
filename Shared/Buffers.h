@@ -41,15 +41,14 @@ public:
 		return buffer_.front();
 	}
 	 
-	// could use move semantics rather than const reference.
 	template <class MessageType>
-	const MessageType& getAndPopFront()
+    MessageType getAndPopFront()
 	{
 		boost::mutex::scoped_lock lock(mutex_);
-		MessageType temp = buffer_.front();
-		buffer.pop_front();
+		auto temp = buffer_.front();
+		buffer_.pop_front();
 		--buffer_size;
-		return temp;
+		return std::move(temp);
 	}
 
 	bool isEmpty() const 

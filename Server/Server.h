@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <string>
 
-//#include "../Shared/Buffers.h"
 #include "../Shared/Message.h"
+#include "../Shared/Buffers.h"
 #include "../Shared/InBuffer.h"
 #include "../Shared/OutBuffer.h"
 #include "../Shared/Utils.h"
@@ -66,16 +66,15 @@ namespace net
 
 		void SendAllMessage(std::string msg)
 		{
-		//	static std::string msg = "test";
 			for (tcp_const_itor it = connections.begin(); it!=connections.end(); ++it)
 			{
 				(*it)->SendMessage(msg); 
 			}
 		}
 
-		const int Size() const { /*std::cout << "count " << count << std::endl;*/ return count;}
+		const int Size() const { return count;}
 
-		const std::string& RemoteAddress() const // was non const.
+		const std::string RemoteAddress() const // was non const.
 		{
 			return connections.back()->GetAddress();
 		}
@@ -124,7 +123,7 @@ namespace net
 			}
 		}
 	};
-
+    
 	class UDPServer
 	{
 	public:
@@ -135,7 +134,17 @@ namespace net
 			StartReceive();
 		}
 
-		~UDPServer()
+        UDPServer(boost::asio::io_service& service, MessageBuffer<Message> * in, 
+            MessageBuffer<std::string> * out) :
+            socket(service, udp::endpoint(udp::v4(), 7000)),
+            out_buffer(out),
+            in_buffer(in)
+        {
+            std::cout << "Starting UDP Server." << std::endl;
+            StartReceive();
+        }
+		
+        ~UDPServer()
 		{
 			std::cout << "Exiting UDPServer" << std::endl;
 			socket.close();
@@ -149,7 +158,6 @@ namespace net
 			{
 				std::cout << "Adding new address : " << new_ep << std::endl;
 				clients.push_back(new_ep);
-				//clients.push_back(endPoint);
 			}
 			else
 				std::cout << "Found address." << std::endl;
@@ -157,8 +165,8 @@ namespace net
 
 		void StartReceive()
 		{
-			socket.async_receive_from(boost::asio::buffer(receiveBuffer), endPoint, boost::bind(&UDPServer::HandleReceive, 
-				this, boost::asio::placeholders::error));
+			socket.async_receive_from(boost::asio::buffer(receiveBuffer), endPoint, 
+                boost::bind(&UDPServer::HandleReceive, this, boost::asio::placeholders::error));
 
 		}
 
@@ -167,8 +175,8 @@ namespace net
 			if (!error || error != boost::asio::error::message_size)
 			{
 				std::cout << "received : " << (*receiveBuffer.data()) << std::endl;
-				// add to game buffer here.
-				IN_BUFFER.PushMessage(receiveBuffer.data());
+                Message m(receiveBuffer.data());
+                in_buffer->pushMessage(m);
 				StartReceive();
 			}
 			else
@@ -180,16 +188,15 @@ namespace net
 		
 		void Send()
 		{
-			while (!OUT_BUFFER.Empty()) // might need to copy it.
+            while (!out_buffer->isEmpty())
 			{
 				for (static const_itor it = clients.begin();it != clients.end(); ++it)
 				{
-					static std::string msg = OUT_BUFFER.Front();
+                    static std::string msg = out_buffer->getAndPopFront<std::string>(); 
 					std::cout << "sending " << (*it) << std::endl;
 					socket.async_send_to(buffer(msg), (*it), 
 						boost::bind(&UDPServer::HandleSend,this, msg));
 				}
-				//OUT_BUFFER.PopMessage();
 			}
 		}
 
@@ -202,10 +209,9 @@ namespace net
 		udp::endpoint endPoint;
 		std::vector<udp::endpoint> clients;
 		boost::array<char, 128> receiveBuffer;
-		//boost::array<std::string, 1> receiveBuffer;
+        MessageBuffer<std::string> * out_buffer;
+        MessageBuffer<Message> * in_buffer;
 	};
 }
 
 #endif
-
-

@@ -4,7 +4,8 @@
 #include <iostream>
 #include "BaseEntity.h"
 #include "types.h"
-
+#include <strstream>
+#include <sstream>
 //typedef boost::shared_ptr<BaseEntity> entity_ptr;
 
 class Message
@@ -19,6 +20,12 @@ public:
 		health(ent->Health()), x(ent->Position().x), y(ent->Position().y)
 	{
 	}
+
+    Message(const char * data)
+    {
+        std::istringstream stream(data);
+        stream >> *this;
+    }
 
 	Message(const Message& copy)
 	{

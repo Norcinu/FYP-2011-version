@@ -7,6 +7,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
 #include "../Shared/Utils.h"
+#include <functional>
 
 using namespace boost::asio;
 using boost::asio::ip::tcp;
@@ -70,7 +71,7 @@ public:
 			placeholders::error, placeholders::bytes_transferred));
 	}
 
-	const std::string& GetAddress() const
+	const std::string GetAddress() const
 	{
 		return socket.remote_endpoint().address().to_string();
 	}

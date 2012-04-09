@@ -15,16 +15,16 @@ int main(int argc, char *argv[])
 	unsigned long frequency = 50;
 
 	MessageBuffer<std::string> out_buffer_;
-	MessageBuffer<Message> in_buffer_;
+    MessageBuffer<Message> in_buffer_;
 
 	try
 	{
 		boost::shared_ptr<Timer> game_timer(new Timer);
-		boost::shared_ptr<World> world(new World);
+		boost::shared_ptr<World> world(new World(&in_buffer_, &out_buffer_));
 
 		boost::asio::io_service service;
 		net::TCPServer tcp_server(service);
-		net::UDPServer udp_server(service);
+		net::UDPServer udp_server(service, &in_buffer_, &out_buffer_);
 
 		boost::thread network_service(boost::bind(&boost::asio::io_service::run, &service));
 
@@ -34,27 +34,27 @@ int main(int argc, char *argv[])
             SLEEP(frequency);
 		    auto time_now = timing::ElapsedTime(start_time);
 
-        	    if (tcp_server.Size() > client_count)
-	            {
+        	if (tcp_server.Size() > client_count)
+	        {
 		        if (!world->CreateEntity())
-			{
-			    std::cerr << "**** Error creating entity ****" << std::endl;
-			}
-			else
-			{
-			    std::string n = "new client created";
-			    std::cout << n << " : " << "\nplayer count : " << client_count << std::endl;
-			    ++client_count;
+			    {
+			        std::cerr << "**** Error creating entity ****" << std::endl;
+			    }
+			    else
+			    {
+			        std::string n = "new client created";
+			        std::cout << n << " : " << "\nplayer count : " << client_count << std::endl;
+			        ++client_count;
 
-			    std::string address = tcp_server.RemoteAddress();
-    			short port = tcp_server.NewRemotePort();
-			    udp_server.AddEndPoint(address, port);
-			}
+			        std::string address = tcp_server.RemoteAddress();
+    			    short port = tcp_server.NewRemotePort();
+			        udp_server.AddEndPoint(address, port);
+			    }
 		    }
 
-		    if (time_now > frequency && !OUT_BUFFER.Empty())
+            if (time_now > frequency && !out_buffer_.isEmpty())
 		    {
-		        udp_server.Send(); // change timeGetTime() usage here.
+		        udp_server.Send(); 
 			    std::cout << "[Sending UDP update] : [timestamp = " << GET_TIME << "]" << std::endl;
 			    last_time = time_now;
 		    }
