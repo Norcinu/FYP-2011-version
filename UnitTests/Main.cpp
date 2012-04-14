@@ -1,19 +1,5 @@
 #include <gtest/gtest.h>
-
-class StringMessageBufferTest :  public ::testing::Test
-{
-protected:
-	StringMessageBufferTest() {}
-	virtual ~StringMessageBufferTest() {}
-
-	virtual void SetUp() 
-	{
-	}
-
-	virtual void TearDown()
-	{
-	}
-};
+#include "TimerTests.h"
 
 int main(int argc, char **argv)
 {

@@ -14,9 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\Buffers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -26,6 +23,10 @@
     <ClCompile Include="TimerTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="BufferTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shared\Buffers.h">
@@ -39,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="..\Shared\TimerMacros.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferTests.h">
+      <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

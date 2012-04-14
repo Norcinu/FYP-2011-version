@@ -209,8 +209,8 @@ namespace net
 		udp::endpoint endPoint;
 		std::vector<udp::endpoint> clients;
 		boost::array<char, 128> receiveBuffer;
-        MessageBuffer<std::string> * out_buffer;
-        MessageBuffer<Message> * in_buffer;
+		MessageBuffer<std::string> * out_buffer;
+		MessageBuffer<Message> * in_buffer;
 	};
 }
 

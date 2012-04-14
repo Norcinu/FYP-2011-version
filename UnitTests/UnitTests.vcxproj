@@ -84,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shared\Buffers.cpp" />
+    <ClCompile Include="BufferTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="TimerTests.cpp" />
     <ClCompile Include="TimerTests.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="..\Shared\Message.h" />
     <ClInclude Include="..\Shared\Timer.h" />
     <ClInclude Include="..\Shared\TimerMacros.h" />
+    <ClInclude Include="BufferTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

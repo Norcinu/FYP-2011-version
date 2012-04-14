@@ -16,7 +16,7 @@ public:
 	{
 	}
 
-	Message(entity_ptr ent) : active(ent->Active()), id(ent->ID()), 
+	Message(const entity_ptr ent) : active(ent->Active()), id(ent->ID()), 
 		health(ent->Health()), x(ent->Position().x), y(ent->Position().y)
 	{
 	}

@@ -1,6 +1,6 @@
 #include "TimerTests.h"
 
-TEST(Timer, ResetSeconds)
+TEST(TimerTest, ResetSeconds)
 {
 	Timer t;
 	EXPECT_EQ(0, t.Seconds());

@@ -10,7 +10,7 @@ protected:
 	TimerTest() {}
 	virtual ~TimerTest() {}
 	virtual void SetUp() {}
-	virtual void TearDown() {}
+	virtual void TearDown() {printf("timer teardown\n"); std::cin.get(); }
 };
 
 #endif

@@ -1,5 +1,4 @@
 #include "InBuffer.h"
-//#include <boost/tr1/memory.hpp>
 #include <strstream>
 #include <sstream>
 
