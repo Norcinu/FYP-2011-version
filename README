@@ -1,0 +1,15 @@
+README:
+
+About -> Project to implement both dead reckoning and local perception filters.
+
+Client -> Graphical visualisation of game.
+
+Server -> Dedicated server to run a game simulation.
+
+Shared -> Shared code between the two projects.
+
+Compilers supported : Visual Studio 2010 + Clang 3.1 (built from github, Linux). Also the client requires SDL for graphics and boost::asio for networking. The server again uses boost::asio. 
+
+Platform specifics : Timer uses timeGetTime, QueryPerformanceFrequency and QueryPerformanceCounter in Windows, so links against winnmm.lib. The Linux version links with the -lrt option.
+
+No makefile is supplied for the Clang/Linux version at the moment but I should have one soon when I can be bothered, I have only just got it compiling on Linux.
