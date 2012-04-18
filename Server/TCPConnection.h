@@ -7,129 +7,199 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/array.hpp>
 #include "../Shared/Utils.h"
+
 #include <functional>
+#include <set>
+#include <deque>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 using namespace boost::asio;
 using boost::asio::ip::tcp;
 
-class TCPConnection : public boost::enable_shared_from_this<TCPConnection>
+class ChatMessage
 {
 public:
+	enum { HEADER_LENGTH = 4 };
+	enum { MAX_BODY_LENGTH = 512 };
 
-	typedef boost::shared_ptr<TCPConnection> connection_ptr;
+	ChatMessage() 
+		: body_length(0) 
+	{}
 
-	~TCPConnection(void)
-	{
-		socket.close();
-	}
-
-	static connection_ptr Create(boost::asio::io_service& service)
-	{
-		return connection_ptr(new TCPConnection(service));
-	}
-
-	tcp::socket& Socket() { return socket; }
+	const char * Data() const { return data; }
+	char * Data() { return data; }
+	size_t Length() const { return HEADER_LENGTH + body_length; }
+	const char * Body() const { return data + HEADER_LENGTH; }
+	char * Body() { return data + HEADER_LENGTH; }
+	size_t BodyLength() const { return body_length; }
 	
-	void Start()
+	void BodyLength(size_t new_length)
 	{
-		socket.async_read_some(boost::asio::buffer(data, max_length), boost::bind(&TCPConnection::HandleRead, this,		
-			boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+		body_length = new_length;
+		if (body_length > MAX_BODY_LENGTH)
+			body_length = MAX_BODY_LENGTH;
+	}
 
-		std::cout << "SENDING CLIENT ID : " << client_id << std::endl;
-		//static std::string ref_ = utils::toString(reference_);
-		//client_id = client_id_;
+	bool DecodeHeader()
+	{
+		using namespace std;
+		char header[HEADER_LENGTH + 1] = "";
 		
-		// Dont wanna do this but my conversion does not seem to work.
-		static std::string reference_id;
-		switch (client_id)
+		strncat(header, data, HEADER_LENGTH);
+		body_length = atoi(header);
+		
+		if (body_length > MAX_BODY_LENGTH)
 		{
-		case 0:
-			reference_id = "0\r\n";
-			break;
-		case 1:
-			reference_id = "1\r\n";
-			break;
-		case 2:
-			reference_id = "2\r\n";
-			break;
-		case 3:
-			reference_id = "3\r\n";
-			break;
+			body_length = 0;
+			return false;
 		}
-
-		std::cout << "REFERENCE ID : " << reference_id << std::endl;
-		//reference_id + "\r\n";
-
-		socket.async_send(boost::asio::buffer(reference_id, reference_id.size()), 
-			boost::bind(&TCPConnection::HandleWrite, this, placeholders::error, placeholders::bytes_transferred));
+		
+		return true;
 	}
 
-	void SendMessage(const std::string msg)
+	void EncodeHeader()
 	{
-		static std::string meh = msg;
-		socket.async_send(boost::asio::buffer(meh, sizeof(meh)), boost::bind(&TCPConnection::HandleWrite, this, 
-			placeholders::error, placeholders::bytes_transferred));
+		using namespace std;
+		char header[HEADER_LENGTH + 1] = "";
+		sprintf(header, "%4d", body_length);
+		memcpy(data, header, HEADER_LENGTH);
 	}
 
-	const std::string GetAddress() const
-	{
-		return socket.remote_endpoint().address().to_string();
-	}
-
-	int ClientID() const { return client_id; }
-	void ClientID(const int id) { client_id = id; }
-
-private:	
-	TCPConnection(boost::asio::io_service& service) : socket(service), udp_remote_port(0),
-		client_id(0)
-	{
-
-	}
-
-	void HandleRead(const boost::system::error_code& error, size_t bytes_transferred) 
-	{
-		if (!error)
-		{
-			std::cout << data << std::endl;
-		}
-
-		if (error == boost::asio::error::connection_reset ||
-			error == boost::asio::error::bad_descriptor  ||
-			error == boost::asio::error::eof)
-		{
-			socket.close();
-		}	
-	}
-
-	void HandleWrite(const boost::system::error_code& error, size_t bytes_transferred)
-	{
-		if (error == boost::asio::error::connection_reset ||
-			error == boost::asio::error::bad_descriptor  ||
-			error == boost::asio::error::eof)
-		{
-			socket.close();
-		}
-
-		if (!error)
-			std::cout << __FUNCTION__ << " OK." << std::endl;
-		else
-			std::cout << __FUNCTION__ << " error." << std::endl;
-	} 
-
-	bool IsErrorDisconnect(const boost::system::error_code& error)
-	{
-		return (error == boost::asio::error::connection_reset) ||
-			(error == boost::asio::error::bad_descriptor)   ||
-			(error == boost::asio::error::eof);
-	}
-	
-	short udp_remote_port;
-	int client_id;
-	tcp::socket socket;
-	std::string message;
-	enum { max_length = 5 };
-	boost::array<std::string, 1> rec_buffer;
-	char data[max_length];
+private:
+	char data[HEADER_LENGTH + MAX_BODY_LENGTH];
+	size_t body_length;
 };
+
+typedef std::deque<ChatMessage> ChatMessageQueue;
+
+//-----------
+class ChatParticipant
+{
+public:
+	virtual ~ChatParticipant() {}
+	virtual void Deliver(const ChatMessage& msg) = 0;
+};
+
+typedef boost::shared_ptr<ChatParticipant> ChatParticipantPtr;
+
+//----------
+class ChatRoom
+{
+public:
+	ChatRoom() {}
+	~ChatRoom() {}
+
+	void Join(ChatParticipantPtr p)
+	{
+		participants.insert(p);
+		std::for_each(recent_messages.begin(), recent_messages.end(),
+			boost::bind(&ChatParticipant::Deliver, p, _1));
+	}
+
+	void Leave(ChatParticipantPtr p)
+	{
+		participants.erase(p);
+	}
+
+	void Deliver(const ChatMessage& msg)
+	{
+		recent_messages.push_back(msg);
+		while (recent_messages.size() > MAX_RECENT_MESSAGES)
+			recent_messages.pop_front();
+
+		std::for_each(participants.begin(), participants.end(), 
+			boost::bind(&ChatParticipant::Deliver, _1, boost::ref(msg)));
+	}
+
+private:
+	std::set<ChatParticipantPtr> participants;
+	enum { MAX_RECENT_MESSAGES = 100 };
+	ChatMessageQueue recent_messages;
+};
+
+class ChatSession : public ChatParticipant,
+	public boost::enable_shared_from_this<ChatSession>
+{
+public:
+	ChatSession(io_service& ios, ChatRoom& r) :
+	  socket(ios), 
+	  room(r) 
+	  {}
+
+	  tcp::socket& Socket() { return socket; }
+
+	  void Start()
+	  {
+		  room.Join(shared_from_this());
+		  async_read(socket, buffer(read_msg.Data(), ChatMessage::HEADER_LENGTH),
+			  boost::bind(&ChatSession::HandleReadHeader, shared_from_this(),
+			  boost::asio::placeholders::error));
+	  }
+
+	  void Deliver(const ChatMessage& msg) 
+	  {
+		  bool writing = !write_msgs.empty();
+		  write_msgs.push_back(msg);
+		  if (!writing)
+		  {
+			  async_write(socket, buffer(write_msgs.front().Data(), write_msgs.front().Length()),
+				  boost::bind(&ChatSession::HandleWrite, shared_from_this(),
+				  placeholders::error));
+		  }
+	  }
+	  
+	  void HandleReadHeader(const boost::system::error_code& ec)
+	  {
+		  if (!ec && read_msg.DecodeHeader())
+		  {
+			  async_read(socket, buffer(read_msg.Body(), read_msg.Length()),
+				  boost::bind(&ChatSession::HandleReadBody, shared_from_this(),
+				  boost::asio::placeholders::error));
+		  }
+		  else
+		  {
+			  room.Leave(shared_from_this());
+		  }
+	  }
+
+	  void HandleReadBody(const boost::system::error_code& ec) 
+	  {
+		  if (!ec)
+		  {
+			  std::cout << read_msg.Data() << std::endl;
+			  room.Deliver(read_msg);
+			  async_read(socket, buffer(read_msg.Data(), ChatMessage::HEADER_LENGTH),
+				  boost::bind(&ChatSession::HandleReadHeader, shared_from_this(),
+				  placeholders::error));
+		  }
+	  }
+
+	  void HandleWrite(const boost::system::error_code& ec)
+	  {
+		  if (!ec)
+		  {
+			  write_msgs.pop_front();
+			  if (!write_msgs.empty())
+			  {
+				  async_write(socket, buffer(write_msgs.front().Data(), write_msgs.front().Length()),
+					  boost::bind(&ChatSession::HandleWrite, shared_from_this(),
+					  placeholders::error));
+			  }
+		  }
+		  else
+			  room.Leave(shared_from_this());
+	  }
+
+private:
+	tcp::socket socket;
+	ChatRoom& room;
+	ChatMessage read_msg;
+	ChatMessageQueue write_msgs;
+};
+
+typedef boost::shared_ptr<ChatSession> ChatSessionPtr;
 
 #endif

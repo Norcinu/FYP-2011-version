@@ -14,7 +14,7 @@
 #include "../Shared/maths.h"
 #include "../Shared/Message.h"
 
-#define for_each BOOST_FOREACH 
+//#define for_each BOOST_FOREACH 
 
 #define MAXIMUM_FRAME_RATE 120
 #define MINIMUM_FRAME_RATE 15

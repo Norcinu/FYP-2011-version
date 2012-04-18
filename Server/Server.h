@@ -36,93 +36,35 @@ namespace net
 	class TCPServer
 	{
 	public:
-
-		typedef std::list<TCPConnection::connection_ptr>::const_iterator tcp_const_itor;
-		typedef std::list<TCPConnection::connection_ptr>::iterator tcp_itor;
-
-		TCPServer(boost::asio::io_service& service) : new_client(false), 
-			acceptor(service,tcp::endpoint(tcp::v4(), 23)), count(0)
+		TCPServer(io_service& service, const tcp::endpoint& ep) :
+		  m_service(service), 
+		  m_acceptor(service, ep) { StartAccept(); }
+		
+		void StartAccept() 
 		{
-			std::cout << "Starting TCP Server." << std::endl;
+			ChatSessionPtr new_session(new ChatSession(m_service, m_room));
+			m_acceptor.async_accept(new_session->Socket(), 
+				boost::bind(&TCPServer::HandleAccept, this, new_session,
+				boost::asio::placeholders::error));
+		}
+		
+		void HandleAccept(ChatSessionPtr session, 
+			const boost::system::error_code& ec)
+		{
+			if (!ec)
+			{
+				session->Start();
+			}
 			StartAccept();
 		}
 
-		~TCPServer(void)
-		{
-			std::cout << "Exiting TCPServer" << std::endl;
-		}
-
-		void CheckDisconnected()
-		{
-			for (static tcp_itor it=connections.begin();it != connections.end(); ++it)
-			{
-				if (!(*it)->Socket().is_open()) {
-					//(*it)->Socket().close();
-					connections.erase( it );
-					std::cout << "active connections = " << connections.size() << std::endl;
-				}
-			}
-		}
-
-		void SendAllMessage(std::string msg)
-		{
-			for (tcp_const_itor it = connections.begin(); it!=connections.end(); ++it)
-			{
-				(*it)->SendMessage(msg); 
-			}
-		}
-
-		const int Size() const { return count;}
-
-		const std::string RemoteAddress() const // was non const.
-		{
-			return connections.back()->GetAddress();
-		}
-
-		short NewRemotePort() const 
-		{
-			// must be a better way.
-			std::string port = "800";
-			std::string last_digit = utils::str::ToString(connections.size()-1);
-			port += last_digit;
-			
-			std::cout << port << std::endl;
-			
-			short p;
-			utils::str::FromString<short>(p, port, std::dec);
-			return p;
-		}
-
 	private:
-		bool new_client;
-		int count;
-		tcp::acceptor acceptor;
-		std::list<TCPConnection::connection_ptr> connections;
-
-	private:
-		void StartAccept()
-		{
-			TCPConnection::connection_ptr new_connection = TCPConnection::Create(acceptor.get_io_service());
-			acceptor.async_accept(new_connection->Socket(), boost::bind(&TCPServer::HandleAccept, this, 
-				new_connection, boost::asio::placeholders::error));
-		}
-
-		void HandleAccept(TCPConnection::connection_ptr con, const boost::system::error_code& error)
-		{
-			if (!error)
-			{
-				new_client = true;
-				con->ClientID(connections.size());
-				connections.push_back(con);
-				++count;
-
-				std::cout << "New TCP Connection." << std::endl;
-				std::cout << "number of clients connected : " << connections.size() << std::endl;
-				con->Start();
-				StartAccept();
-			}
-		}
+		boost::asio::io_service& m_service;
+		tcp::acceptor m_acceptor;
+		ChatRoom m_room;
 	};
+
+	typedef boost::shared_ptr<TCPServer> ChatServerPtr;
     
 	class UDPServer
 	{
